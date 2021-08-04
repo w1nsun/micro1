@@ -1,0 +1,54 @@
+api_category_create:
+    path: /api/category
+    controller: App\UI\Http\Rest\Game\CreateCategoryAction
+    methods: [POST]
+
+api_category_update:
+    path: /api/category/{categoryId}
+    controller: App\UI\Http\Rest\Game\UpdateCategoryAction
+    methods: [PUT, PATCH]
+    requirements:
+        categoryId: '\d+'
+
+api_category_delete:
+    path: /api/category/{categoryId}
+    controller: App\UI\Http\Rest\Game\DeleteCategoryAction
+    methods: [DELETE]
+    requirements:
+        categoryId: '\d+'
+
+api_category_get:
+    path: /api/category/{categoryId}
+    controller: App\UI\Http\Rest\Game\GetCategoryAction
+    methods: [GET]
+    requirements:
+        categoryId: '\d+'
+
+api_category_get_list:
+    path: /api/category
+    controller: App\UI\Http\Rest\Game\GetCategoryListAction
+    methods: [GET]
+
+api_category_games_create_or_update:
+    path: /api/category-games/{categoryId}
+    controller: App\UI\Http\Rest\Game\CreateOrUpdateCategoryGamesAction
+    methods: [PUT, PATCH]
+    requirements:
+        categoryId: '\d+'
+
+api_category_games_delete:
+    path: /api/category-games/{categoryId}
+    controller: App\UI\Http\Rest\Game\DeleteCategoryGamesAction
+    methods: [DELETE]
+    requirements:
+        categoryId: '\d+'
+
+api_category_games_get:
+    path: /api/category-games/{categoryId}
+    controller: App\UI\Http\Rest\Game\GetCategoryGamesAction
+    methods: [GET]
+
+api_games_get:
+    path: /api/game/{gameId}
+    controller: App\UI\Http\Rest\Game\GetGameAction
+    methods: [GET]

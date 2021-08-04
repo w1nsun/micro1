@@ -1,0 +1,68 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    container.dumper.inline_factories: true
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    #INFRASTRUCTURE
+    App\Infrastructure\Game\Repository\:
+        resource: '../src/Infrastructure/Game/Repository/'
+
+    Doctrine\ORM\EntityManager: '@doctrine.orm.entity_manager'
+    App\Infrastructure\Shared\Component\UuidGenerator: ~
+    App\Infrastructure\Shared\Logger\CommonProcessor:
+        tags:
+            - { name: monolog.processor }
+    App\Infrastructure\Shared\Logger\LogstashFormatter:
+        arguments:
+            - 'micro1'
+
+
+    #DOMAIN
+    App\Domain\Game\Repository\CategoryRepository:
+        alias: App\Infrastructure\Game\Repository\DoctrineCategoryRepository
+
+    App\Domain\Game\Repository\GameRepository:
+        alias: App\Infrastructure\Game\Repository\DoctrineGameRepository
+
+#    App\Domain\Shared\Service\EventDispatcher:
+#        alias: 'event_dispatcher'
+#
+    #APPLICATION
+    App\Application\Game\Command\:
+        resource: '../src/Application/Game/Command/*/*Handler.php'
+
+    App\Application\Game\Validator\:
+        resource: '../src/Application/Game/Validator/*Validator.php'
+        tags: [ 'validator.constraint_validator' ]
+
+    App\Application\Game\EventListener\:
+        resource: '../src/Application/Game/EventListener/'
+
+    App\Application\Shared\Serializer\ApiSerializer:
+        autoconfigure: false
+        arguments:
+            $serializer: '@serializer'
+
+#    App\Application\User\EventListener\AccountRegisteredEventHandler:
+#        tags:
+#            - { name: kernel.event_listener, event: user.account_registered, method: execute }
+
+    #UI
+    App\UI\Http\Rest\Game\:
+        resource: '../src/UI/Http/Rest/Game/*'
+        tags: [ 'controller.service_arguments' ]
+
+    #see framework.yaml => error_controller
+    App\UI\Http\ErrorController:
+        tags: [ 'controller.service_arguments' ]
+
+    App\UI\Constraint\ConstraintViolationConverter: ~
